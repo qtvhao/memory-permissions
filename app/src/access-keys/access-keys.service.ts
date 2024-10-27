@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAccessKeyDto } from './dto/create-access-key.dto';
 import { v4 as uuidv4 } from 'uuid';
+import { CheckPermissionDto } from './dto/check-permission.dto';
+import { PermissionsService } from '../permissions/permissions.service';
 
 @Injectable()
 export class AccessKeysService {
   private accessKeys = []; // Mảng lưu trữ Access Keys trong RAM
+  constructor(private readonly permissionsService: PermissionsService) {}
 
   createAccessKey(createAccessKeyDto: CreateAccessKeyDto) {
     const { user_id, description } = createAccessKeyDto;
@@ -26,5 +29,44 @@ export class AccessKeysService {
       message: 'Access key created successfully',
       access_key: newAccessKey,
     };
+  }
+
+  // Phương thức kiểm tra quyền
+  checkPermission(checkPermissionDto: CheckPermissionDto) {
+    const { access_key_id, secret_access_key, permission, resource } = checkPermissionDto;
+
+    // Kiểm tra xem Access Key có hợp lệ không
+    const accessKey = this.accessKeys.find(
+      (key) => key.access_key_id === access_key_id && key.secret_access_key === secret_access_key,
+    );
+
+    if (!accessKey) {
+      return {
+        status: 'success',
+        has_permission: false,
+        message: `Invalid access key or secret key`,
+      };
+    }
+
+    // Kiểm tra quyền trong PermissionsService
+    const hasPermission = this.permissionsService.hasPermission(
+      accessKey.user_id,
+      permission,
+      resource,
+    );
+
+    if (hasPermission) {
+      return {
+        status: 'success',
+        has_permission: true,
+        message: `Access granted for ${permission} permission on resource ${resource}`,
+      };
+    } else {
+      return {
+        status: 'success',
+        has_permission: false,
+        message: `Access denied for ${permission} permission on resource ${resource}`,
+      };
+    }
   }
 }

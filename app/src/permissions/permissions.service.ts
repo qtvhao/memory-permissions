@@ -25,4 +25,11 @@ export class PermissionsService {
       permission: newPermission,
     };
   }
+
+  // Phương thức kiểm tra quyền
+  hasPermission(user: string, permission: string, resource: string): boolean {
+    return this.permissions.some(
+      (perm) => perm.user === user && perm.permission === permission && perm.resource === resource,
+    );
+  }
 }

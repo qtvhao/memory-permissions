@@ -1,6 +1,7 @@
-import { Controller, Post, Get, Body } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { AccessKeysService } from './access-keys.service';
 import { CreateAccessKeyDto } from './dto/create-access-key.dto';
+import { CheckPermissionDto } from './dto/check-permission.dto';
 
 @Controller('access-keys')
 export class AccessKeysController {
@@ -11,4 +12,8 @@ export class AccessKeysController {
     return this.accessKeysService.createAccessKey(createAccessKeyDto);
   }
 
+  @Post('check-permission')
+  checkPermission(@Body() checkPermissionDto: CheckPermissionDto) {
+    return this.accessKeysService.checkPermission(checkPermissionDto);
+  }
 }
