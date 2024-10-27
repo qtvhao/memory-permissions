@@ -19,6 +19,9 @@ RUN yarn run test:e2e
 # Build the app
 RUN yarn build
 
+# Remove development dependencies
+RUN yarn install --production
+
 FROM node:20
 
 # Get nest CLI
@@ -28,10 +31,11 @@ WORKDIR /app
 COPY ./app/package.json ./app/yarn.lock ./
 
 # Copy the built app from the previous stage
-COPY --from=0 /app/dist/ ./
+COPY --from=0 /app/dist/ ./dist/
+COPY --from=0 /app/node_modules/ ./node_modules/
 
 # Expose the port that your app runs on
 EXPOSE 3000
 
 # Define the command to run the app
-CMD ["yarn", "start"]
+CMD ["yarn", "start:prod"]
