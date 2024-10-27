@@ -10,11 +10,11 @@ COPY ./app/package.json ./app/yarn.lock ./
 # Install app dependencies using yarn
 RUN yarn install
 
-# Run end-to-end tests
-RUN yarn run test:e2e
-
 # Copy the rest of the app's source code to the container
 COPY ./app/ .
+
+# Run end-to-end tests
+RUN yarn run test:e2e
 
 # Expose the port that your app runs on
 EXPOSE 3000
