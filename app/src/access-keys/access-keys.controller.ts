@@ -10,6 +10,17 @@ export class AccessKeysController {
   constructor(private readonly accessKeysService: AccessKeysService) {}
 
   @Post('create')
+  @ApiOperation({ summary: 'Create a new access key' })
+  @ApiResponse({ status: 201, description: 'The access key has been successfully created.' })
+  @ApiResponse({ status: 400, description: 'Invalid input data.' })
+  @ApiBody({
+    schema: {
+      example: {
+        user_id: 'user_id',
+        description: 'Access key for API access',
+      },
+    },
+  })
   createAccessKey(@Body() createAccessKeyDto: CreateAccessKeyDto) {
     return this.accessKeysService.createAccessKey(createAccessKeyDto);
   }
@@ -17,7 +28,17 @@ export class AccessKeysController {
   @Post('check-permission')
   @ApiOperation({ summary: 'Check access key permission for a resource' })
   @ApiResponse({ status: 200, description: 'Permission check result.' })
-  @ApiBody({ schema: { example: { access_key_id: 'key_id', secret_access_key: 'secret_key', permission: 'read', resource: 'doc456' } } })
+  @ApiResponse({ status: 400, description: 'Invalid input data.' })
+  @ApiBody({
+    schema: {
+      example: {
+        access_key_id: 'access_key_id',
+        secret_access_key: 'secret_access_key',
+        permission: 'read',
+        resource: 'doc456',
+      },
+    },
+  })
   checkPermission(@Body() checkPermissionDto: CheckPermissionDto) {
     return this.accessKeysService.checkPermission(checkPermissionDto);
   }
