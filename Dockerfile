@@ -16,6 +16,20 @@ COPY ./app/ .
 # Run end-to-end tests
 RUN yarn run test:e2e
 
+# Build the app
+RUN yarn build
+
+FROM node:20
+
+# Get nest CLI
+RUN yarn global add @nestjs/cli
+
+WORKDIR /app
+COPY ./app/package.json ./app/yarn.lock ./
+
+# Copy the built app from the previous stage
+COPY --from=0 /app/dist/ ./
+
 # Expose the port that your app runs on
 EXPOSE 3000
 
