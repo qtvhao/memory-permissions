@@ -7,6 +7,14 @@ export class UsersService {
 
   createUser(createUserDto: CreateUserDto) {
     const { user_id, name, email, attributes } = createUserDto;
+    // Kiểm tra xem người dùng đã tồn tại chưa
+    const existingUser = this.users.find((user) => user.user_id === user_id);
+    if (existingUser) {
+      return {
+        status: 'error',
+        message: 'User already exists',
+      };
+    }
 
     // Tạo đối tượng người dùng
     const newUser = {
