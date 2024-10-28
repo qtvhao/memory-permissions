@@ -35,4 +35,22 @@ export class AccessKeysController {
   checkPermission(@Body() checkPermissionDto: CheckPermissionDto) {
     return this.accessKeysService.checkPermission(checkPermissionDto);
   }
+
+  @Post('get-user')
+  @ApiOperation({ summary: 'Get user by access key pair' })
+  @ApiResponse({ status: 200, description: 'User retrieved successfully.' })
+  @ApiResponse({ status: 400, description: 'Invalid input data.' })
+  @ApiResponse({ status: 404, description: 'User not found.' })
+  @ApiBody({
+    schema: {
+      example: {
+        access_key_id: 'access_key_id',
+        secret_access_key: 'secret_access_key',
+      },
+    },
+  })
+  getUserByAccessKeyPair(@Body() body: { access_key_id: string; secret_access_key: string }) {
+    const { access_key_id, secret_access_key } = body;
+    return this.accessKeysService.getUserByAccessKeyPair(access_key_id, secret_access_key);
+  }
 }

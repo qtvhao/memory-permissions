@@ -5,6 +5,10 @@ import { CreateUserDto } from './dto/create-user.dto';
 export class UsersService {
   private users = []; // Mảng lưu trữ người dùng trong RAM
 
+  getUserById(user_id: string) {
+    return this.users.find((user) => user.user_id === user_id);
+  }
+
   createUser(createUserDto: CreateUserDto) {
     const { user_id, name, email, attributes } = createUserDto;
     // Kiểm tra xem người dùng đã tồn tại chưa
@@ -36,10 +40,5 @@ export class UsersService {
         email,
       },
     };
-  }
-
-  // Thêm một phương thức để lấy tất cả người dùng
-  getAllUsers() {
-    return this.users;
   }
 }
