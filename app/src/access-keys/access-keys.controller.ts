@@ -13,14 +13,7 @@ export class AccessKeysController {
   @ApiOperation({ summary: 'Create a new access key' })
   @ApiResponse({ status: 201, description: 'The access key has been successfully created.' })
   @ApiResponse({ status: 400, description: 'Invalid input data.' })
-  @ApiBody({
-    schema: {
-      example: {
-        user_id: 'user_id',
-        description: 'Access key for API access',
-      },
-    },
-  })
+  @ApiBody({ schema: { example: { user_id: 'user123', description: 'My new access key' } } })
   createAccessKey(@Body() createAccessKeyDto: CreateAccessKeyDto) {
     return this.accessKeysService.createAccessKey(createAccessKeyDto);
   }
